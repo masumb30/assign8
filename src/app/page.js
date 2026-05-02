@@ -1,9 +1,10 @@
 import Image from "next/image";
+import HeroSlider from "@/components/HeroSlider";
 
 export default function Home() {
   return (
-    <div>
-
+    <div className="max-w-7xl px-2 mx-auto">
+      <HeroSlider />
     </div>
   );
 }

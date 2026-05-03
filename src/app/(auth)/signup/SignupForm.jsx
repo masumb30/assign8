@@ -21,7 +21,7 @@ export default function SignupForm() {
             email: formData.email, // required
             password: formData.password, // required
             image: "",
-            callbackURL: "http://localhost:3000",
+            callbackURL: process.env.BETTER_AUTH_URL,
         });
 
         setSignUpPending(false);

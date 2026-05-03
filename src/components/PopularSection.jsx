@@ -71,7 +71,7 @@ export default async function PopularSection() {
                                     <span className="text-xs font-medium text-gray-500 uppercase tracking-wider">{product.brand}</span>
                                 </div>
 
-                                <button className="mt-auto w-full bg-white border-2 border-indigo-100 text-indigo-600 font-semibold py-2.5 rounded-xl block text-center shadow-sm group-hover:bg-indigo-600 group-hover:text-white group-hover:border-indigo-600 group-hover:shadow-indigo-200 transition-all">
+                                <button className="mt-auto w-full bg-white border-2 border-indigo-100 cursor-pointer text-indigo-600 font-semibold py-2.5 rounded-xl block text-center shadow-sm group-hover:bg-indigo-600 group-hover:text-white group-hover:border-indigo-600 group-hover:shadow-indigo-200 transition-all">
                                     View Details
                                 </button>
                             </div>

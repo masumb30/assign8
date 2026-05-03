@@ -13,7 +13,7 @@ export default function Navbar() {
                     {/* Logo */}
                     <div className="flex-shrink-0 flex items-center">
                         <Link href="/" className="text-2xl font-bold text-indigo-600 tracking-tight">
-                            ShopBrand
+                            <span className="text-yellow-400 text-4xl">Sun</span><span className="text-gray-900">Cart</span>
                         </Link>
                     </div>
 

@@ -41,7 +41,7 @@ export default function SignupPage() {
 
     return (
         <div className="min-h-[85vh] flex items-center justify-center bg-gray-50/50 py-12 px-4 sm:px-6 lg:px-8 relative overflow-hidden">
-            <ToastContainer />
+            <ToastContainer autoClose={1000} />
             {/* Background decorations */}
             <div className="absolute top-0 right-0 -m-32 w-96 h-96 bg-indigo-100 rounded-full blur-3xl opacity-50 pointer-events-none"></div>
             <div className="absolute bottom-0 left-0 -m-32 w-96 h-96 bg-rose-100 rounded-full blur-3xl opacity-50 pointer-events-none"></div>
@@ -114,7 +114,7 @@ export default function SignupPage() {
                                 type="email"
                                 required
                                 className="appearance-none relative block w-full px-4 py-3.5 border border-gray-200 placeholder-gray-400 text-gray-900 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-colors sm:text-sm shadow-sm"
-                                placeholder="you@example.com"
+                                placeholder=""
                                 value={formData.email}
                                 onChange={(e) => setFormData({ ...formData, email: e.target.value })}
                             />
@@ -129,9 +129,23 @@ export default function SignupPage() {
                                 type="password"
                                 required
                                 className="appearance-none relative block w-full px-4 py-3.5 border border-gray-200 placeholder-gray-400 text-gray-900 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-colors sm:text-sm shadow-sm"
-                                placeholder="••••••••"
+                                placeholder=""
                                 value={formData.password}
                                 onChange={(e) => setFormData({ ...formData, password: e.target.value })}
+                            />
+                        </div>
+                        <div>
+                            <label className="block text-sm font-bold text-gray-700 mb-1" htmlFor="password">
+                                Profile Photo Url
+                            </label>
+                            <input
+                                id="image"
+                                name="image"
+                                type="text"
+                                className="appearance-none relative block w-full px-4 py-3.5 border border-gray-200 placeholder-gray-400 text-gray-900 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-colors sm:text-sm shadow-sm"
+                                placeholder=""
+                                value={formData.image}
+                                onChange={(e) => setFormData({ ...formData, image: e.target.value })}
                             />
                         </div>
                     </div>

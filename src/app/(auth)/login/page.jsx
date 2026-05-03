@@ -2,21 +2,35 @@
 
 import { authClient } from "@/app/lib/auth-client";
 import Link from "next/link";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useState } from "react";
+import { toast, ToastContainer } from "react-toastify";
 
 export default function LoginPage() {
     const [formData, setFormData] = useState({ email: "", password: "" });
+    const [loginPending, setLoginPending] = useState(false);
+    const searchParams = useSearchParams();
+    const router = useRouter();
+    const callbackUrl = searchParams.get('callbackUrl') || '/';
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+        setLoginPending(true);
         console.log("Login form submitted:", formData);
         const { data, error } = await authClient.signIn.email({
             email: formData.email, // required
             password: formData.password, // required
             rememberMe: true,
-            callbackURL: "http://localhost:3000",
+            callbackURL: callbackUrl,
         });
-        // Add your custom login handler logic here!
+        if (!error) {
+            router.push(callbackUrl);
+            router.refresh();
+        }
+        if (error) {
+            toast.error(error.message);
+        }
+        setLoginPending(false);
     };
 
     const handleGoogleLogin = () => {
@@ -27,6 +41,7 @@ export default function LoginPage() {
     return (
         <div className="min-h-[85vh] flex items-center justify-center bg-gray-50/50 py-12 px-4 sm:px-6 lg:px-8 relative overflow-hidden">
             {/* Background decorations */}
+            <ToastContainer autoClose={1000} />
             <div className="absolute top-0 right-0 -m-32 w-96 h-96 bg-indigo-100 rounded-full blur-3xl opacity-50 pointer-events-none"></div>
             <div className="absolute bottom-0 left-0 -m-32 w-96 h-96 bg-rose-100 rounded-full blur-3xl opacity-50 pointer-events-none"></div>
 
@@ -113,9 +128,10 @@ export default function LoginPage() {
                     <div>
                         <button
                             type="submit"
-                            className="group relative w-full flex justify-center py-3.5 px-4 border border-transparent text-sm font-bold rounded-xl text-white bg-indigo-600 hover:bg-indigo-700 hover:shadow-lg shadow-indigo-200 transition-all focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                            className={`group relative w-full flex justify-center py-3.5 px-4 border border-transparent text-sm font-bold rounded-xl text-white bg-indigo-600 hover:bg-indigo-700 hover:shadow-lg shadow-indigo-200 transition-all focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 ${loginPending ? "opacity-50 cursor-not-allowed" : ""}`}
+                            disabled={loginPending}
                         >
-                            Sign in
+                            {loginPending ? "Signing in..." : "Sign in"}
                         </button>
                     </div>
                 </form>

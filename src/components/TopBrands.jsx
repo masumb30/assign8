@@ -63,7 +63,7 @@ export default function TopBrands() {
                             </p>
 
                             <Link
-                                href="/products"
+                                href="/"
                                 className={`mt-auto inline-flex items-center w-max text-white font-bold bg-white/20 hover:bg-white/30 backdrop-blur-md px-6 py-3 rounded-xl transition-colors shadow-sm ${index === 2 ? 'md:mx-auto' : ''}`}
                             >
                                 Shop {brand.name}

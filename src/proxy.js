@@ -1,19 +1,19 @@
-import { NextResponse } from 'next/server'
-import { authClient } from './app/lib/auth-client';
+import { NextRequest, NextResponse } from "next/server";
+import { headers } from "next/headers";
+import { auth } from "./app/lib/auth";
 
-// This function can be marked `async` if using `await` inside
 export async function proxy(request) {
-    const { data, error, isPending } = await authClient.useSession();
-    console.log(data);
-    if (!data?.session?.id) {
-        return NextResponse.redirect(new URL('/login', request.url))
+    const session = await auth.api.getSession({
+        headers: await headers()
+    })
+
+    if (!session) {
+        return NextResponse.redirect(new URL("/login", request.url));
     }
+
     return NextResponse.next();
 }
 
-// Alternatively, you can use a default export:
-// export default function proxy(request) { ... }
-
 export const config = {
-    matcher: '/products/:id',
-}
+    matcher: ["/products/:path*", "/profile", "/profile/edit"], // Specify the routes the middleware applies to
+};

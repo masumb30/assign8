@@ -102,7 +102,7 @@ export default function Navbar() {
                             Home
                         </Link>
                         <Link
-                            href="/products"
+                            href="/"
                             onClick={() => setIsOpen(false)}
                             className="block px-3 py-3 rounded-md text-base font-medium text-gray-700 hover:text-indigo-600 hover:bg-indigo-50 transition-colors"
                         >

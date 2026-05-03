@@ -1,15 +1,37 @@
 "use client";
 
+import { authClient } from "@/app/lib/auth-client";
 import Link from "next/link";
 import { useState } from "react";
+import { useRouter } from "next/navigation";
+import { toast, ToastContainer } from "react-toastify";
 
 export default function SignupPage() {
+    const router = useRouter();
     const [formData, setFormData] = useState({ name: "", email: "", password: "" });
 
-    const handleSubmit = (e) => {
+    const [signUpPending, setSignUpPending] = useState(false);
+
+    const handleSubmit = async (e) => {
         e.preventDefault();
-        console.log("Signup form submitted:", formData);
-        // Add your custom signup handler logic here!
+        setSignUpPending(true);
+
+        const { data, error } = await authClient.signUp.email({
+            name: formData.name, // required
+            email: formData.email, // required
+            password: formData.password, // required
+            image: "",
+            callbackURL: "http://localhost:3000",
+        });
+
+        setSignUpPending(false);
+
+        if (error) {
+            toast.error(error.message || "Failed to create account");
+        } else {
+
+            router.push('/login')
+        }
     };
 
     const handleGoogleSignup = () => {
@@ -19,6 +41,7 @@ export default function SignupPage() {
 
     return (
         <div className="min-h-[85vh] flex items-center justify-center bg-gray-50/50 py-12 px-4 sm:px-6 lg:px-8 relative overflow-hidden">
+            <ToastContainer />
             {/* Background decorations */}
             <div className="absolute top-0 right-0 -m-32 w-96 h-96 bg-indigo-100 rounded-full blur-3xl opacity-50 pointer-events-none"></div>
             <div className="absolute bottom-0 left-0 -m-32 w-96 h-96 bg-rose-100 rounded-full blur-3xl opacity-50 pointer-events-none"></div>
@@ -116,9 +139,10 @@ export default function SignupPage() {
                     <div>
                         <button
                             type="submit"
-                            className="group relative w-full flex justify-center py-3.5 px-4 border border-transparent text-sm font-bold rounded-xl text-white bg-indigo-600 hover:bg-indigo-700 hover:shadow-lg shadow-indigo-200 transition-all focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                            disabled={signUpPending}
+                            className="group relative w-full flex justify-center py-3.5 px-4 border border-transparent text-sm font-bold rounded-xl text-white bg-indigo-600 hover:bg-indigo-700 hover:shadow-lg shadow-indigo-200 transition-all focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:opacity-70 disabled:cursor-not-allowed"
                         >
-                            Create Account
+                            {signUpPending ? "Creating Account..." : "Create Account"}
                         </button>
                     </div>
                 </form>

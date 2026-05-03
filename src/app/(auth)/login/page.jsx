@@ -1,14 +1,21 @@
 "use client";
 
+import { authClient } from "@/app/lib/auth-client";
 import Link from "next/link";
 import { useState } from "react";
 
 export default function LoginPage() {
     const [formData, setFormData] = useState({ email: "", password: "" });
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
         console.log("Login form submitted:", formData);
+        const { data, error } = await authClient.signIn.email({
+            email: formData.email, // required
+            password: formData.password, // required
+            rememberMe: true,
+            callbackURL: "http://localhost:3000",
+        });
         // Add your custom login handler logic here!
     };
 

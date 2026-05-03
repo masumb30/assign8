@@ -2,9 +2,12 @@
 
 import { useState } from "react";
 import Link from "next/link";
+import { authClient } from "@/app/lib/auth-client";
 
 export default function Navbar() {
     const [isOpen, setIsOpen] = useState(false);
+    const { data, error, isPending } = authClient.useSession();
+    console.log(data);
 
     return (
         <nav className="bg-white border-b border-gray-200 shadow-sm sticky top-0 z-50">
@@ -32,14 +35,36 @@ export default function Navbar() {
 
                     {/* Desktop Auth Buttons */}
                     <div className="hidden md:flex items-center space-x-4">
-                        <div className="flex items-center gap-4">
-                            <Link href="/login" className="text-gray-600 hover:text-indigo-600 font-medium text-sm transition-colors">
-                                Log in
-                            </Link>
-                            <Link href="/signup" className="bg-indigo-600 hover:bg-indigo-700 text-white px-5 py-2 rounded-full text-sm font-medium transition-colors shadow-sm">
-                                Sign up
-                            </Link>
-                        </div>
+                        {isPending ? (
+                            <span className="loading loading-dots loading-md text-indigo-600"></span>
+                        ) : data?.session?.id ? (
+                            <div className="flex items-center gap-4">
+                                <img
+                                    src={data.user.image || "https://ui-avatars.com/api/?name=" + (data.user?.name || "User")}
+                                    alt="User Avatar"
+                                    className="w-10 h-10 rounded-full border-2 border-indigo-100 object-cover"
+                                />
+                                <button
+                                    onClick={async () => {
+                                        await authClient.signOut();
+                                        window.location.reload();
+                                    }}
+                                    className="text-gray-600 hover:text-red-600 font-medium text-sm transition-colors cursor-pointer"
+                                    type="button"
+                                >
+                                    Log out
+                                </button>
+                            </div>
+                        ) : (
+                            <div className="flex items-center gap-4">
+                                <Link href="/login" className="text-gray-600 hover:text-indigo-600 font-medium text-sm transition-colors">
+                                    Log in
+                                </Link>
+                                <Link href="/signup" className="bg-indigo-600 hover:bg-indigo-700 text-white px-5 py-2 rounded-full text-sm font-medium transition-colors shadow-sm">
+                                    Sign up
+                                </Link>
+                            </div>
+                        )}
                     </div>
 
                     {/* Mobile menu button */}
@@ -92,22 +117,49 @@ export default function Navbar() {
                         </Link>
                     </div>
                     <div className="pt-4 pb-6 border-t border-gray-100">
-                        <div className="flex flex-col space-y-3 px-5">
-                            <Link
-                                href="/login"
-                                onClick={() => setIsOpen(false)}
-                                className="block text-center w-full px-4 py-2 border border-gray-200 shadow-sm text-base font-medium rounded-full text-gray-700 bg-white hover:bg-gray-50 transition-colors"
-                            >
-                                Log in
-                            </Link>
-                            <Link
-                                href="/signup"
-                                onClick={() => setIsOpen(false)}
-                                className="block text-center w-full px-4 py-2 border border-transparent shadow-sm text-base font-medium rounded-full text-white bg-indigo-600 hover:bg-indigo-700 transition-colors"
-                            >
-                                Sign up
-                            </Link>
-                        </div>
+                        {
+                            isPending ? (
+                                <span className="loading loading-dots loading-xl"></span>
+                            ) : data?.session?.id ? (
+                                <div className="flex flex-col space-y-3 px-5">
+                                    <div className="flex items-center justify-center gap-3 mb-2">
+                                        <img
+                                            src={data.user.image || "https://ui-avatars.com/api/?name=" + (data.user?.name || "User")}
+                                            alt="User Avatar"
+                                            className="w-12 h-12 rounded-full border-2 border-indigo-100 object-cover"
+                                        />
+                                        <span className="text-sm font-medium text-gray-700">{data.user?.name || "User"}</span>
+                                    </div>
+                                    <button
+                                        onClick={async () => {
+                                            setIsOpen(false);
+                                            await authClient.signOut();
+                                            window.location.reload();
+                                        }}
+                                        className="block text-center w-full px-4 py-2 border border-red-200 shadow-sm text-base font-medium rounded-full text-red-600 bg-white hover:bg-red-50 transition-colors cursor-pointer"
+                                        type="button"
+                                    >
+                                        Log out
+                                    </button>
+                                </div>
+                            ) : (
+                                <div className="flex flex-col space-y-3 px-5">
+                                    <Link
+                                        href="/login"
+                                        onClick={() => setIsOpen(false)}
+                                        className="block text-center w-full px-4 py-2 border border-gray-200 shadow-sm text-base font-medium rounded-full text-gray-700 bg-white hover:bg-gray-50 transition-colors"
+                                    >
+                                        Log in
+                                    </Link>
+                                    <Link
+                                        href="/signup"
+                                        onClick={() => setIsOpen(false)}
+                                        className="block text-center w-full px-4 py-2 border border-transparent shadow-sm text-base font-medium rounded-full text-white bg-indigo-600 hover:bg-indigo-700 transition-colors"
+                                    >
+                                        Sign up
+                                    </Link>
+                                </div>
+                            )}
                     </div>
                 </div>
             )}
